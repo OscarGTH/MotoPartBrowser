@@ -1,0 +1,48 @@
+Listing format
+--------------
+<Brand> <Model> (Can have spaced text) <Year> (1950 - Current year)
+
+Database format
+---------------
+
+
+
+
+-- Create the Brands table
+
+CREATE TABLE Brands (
+    brand_name VARCHAR(255) PRIMARY KEY,
+    description TEXT
+);
+
+-- Create the Models table
+CREATE TABLE Models (
+    model_id UUID PRIMARY KEY,
+    brand_name VARCHAR(255) REFERENCES Brands(brand_name),
+    model_name VARCHAR(255) NOT NULL
+);
+
+-- Create the Years table
+CREATE TABLE Years (
+    year_id UUID PRIMARY KEY,
+    model_id UUID REFERENCES Models(model_id),
+    year_value INTEGER NOT NULL,
+    link_href VARCHAR(50) NOT NULL
+);
+
+-- Create the Parts table
+CREATE TABLE Parts (
+    part_id VARCHAR(30) PRIMARY KEY,
+    year_id UUID REFERENCES Years(year_id),
+    image_link VARCHAR(255) NOT NULL,
+    part_name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    price FLOAT
+);
+
+
+ALTER TABLE Models
+ADD CONSTRAINT unique_model UNIQUE (brand_name, model_name);
+
+ALTER TABLE Years
+ADD CONSTRAINT unique_year_and_model UNIQUE (year_value, model_id);
